@@ -56,8 +56,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
-    <Compile Include="Controllers\StoreManagerController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -65,6 +63,7 @@
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\ShippingAddress.cs" />
     <Compile Include="Models\VisaPayment.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\MusicStoreEntities.cs" />
@@ -253,7 +252,7 @@
     <Content Include="Views\ShoppingCart\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shipping\Address.cshtml" />
+    <Content Include="Views\Shipping\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShoppingCart\CartSummary.cshtml" />

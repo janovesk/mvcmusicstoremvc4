@@ -8,44 +8,29 @@ namespace MvcMusicStore.Controllers
     [Authorize]
     public class ShippingController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
-        //
-        // GET: /Checkout/Address
+        // GET: /Shipping
 
-        public ActionResult Address()
+        public ActionResult Index(string orderId, string amount)
         {
+            ViewBag.OrderId = orderId;
+            ViewBag.Amount = amount;
             return View();
         }
 
-        //
-        // POST: /Checkout/Address
+        //  
+        // POST: /Shipping/Address
         [HttpPost]
         public ActionResult Address(FormCollection values)
         {
-            var order = new Order();
-            TryUpdateModel(order);
+            var shippingAddress = new ShippingAddress();
+            TryUpdateModel(shippingAddress);
 
-            try
-            {
-                order.Username = User.Identity.Name;
-                order.OrderDate = DateTime.Now;
+            var orderId = values["OrderId"];
+            var amount = values["Amount"];
+            //send to service with NSB
 
-                //Save Order
-                storeDB.Orders.Add(order);
-                storeDB.SaveChanges();
+            return RedirectToAction("Index", "Payment", new {orderId, amount });
 
-                //Process the order
-                var cart = ShoppingCart.GetCart(this.HttpContext);
-                cart.CreateOrder(order);
-
-                return RedirectToAction("Index", "Payment", new { id = order.OrderId });
-
-            }
-            catch
-            {
-                //Invalid - redisplay with errors
-                return View(order);
-            }
         }
     }
 }

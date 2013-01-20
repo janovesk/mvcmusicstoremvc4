@@ -10,33 +10,39 @@ namespace MvcMusicStore.Controllers
     {
         //
         // GET: /Payment
-
-        public ActionResult Index()
+        public ActionResult Index(string orderId, string amount)
         {
+            ViewBag.OrderId = orderId;
+            ViewBag.Amount = amount;
             return View();
         }
 
         //
         // POST: /Payment/Visa
         [HttpPost]
-        public ActionResult Visa(VisaPayment visaPayment)
+        public ActionResult Visa(FormCollection values)
         {
+            var visaPayment = new VisaPayment();
+            TryUpdateModel(visaPayment);
+
             if (!ModelState.IsValid)
                 return View("Index");
-            
-            var cart = ShoppingCart.GetCart(this.HttpContext);
-            var orderId = 1; //cart.orderId;
-            
-            return RedirectToAction("Complete", new { id = orderId});
 
+            var orderId = values["OrderId"];
+            var amount = values["Amount"];
+            
+            //send to service with NSB
+            
+            return RedirectToAction("Complete", new {orderId , amount});
         }
 
         //
         // GET: /Payment/Complete
-
-        public ActionResult Complete(int id)
+        public ActionResult Complete(int orderId, decimal amount)
         {
-            return View(id);
+            ViewBag.OrderId = orderId;
+            ViewBag.Amount = amount;
+            return View();
         }
     }
 }

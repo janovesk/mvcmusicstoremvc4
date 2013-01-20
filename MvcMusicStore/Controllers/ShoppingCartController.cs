@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
 using MvcMusicStore.ViewModels;
@@ -74,6 +75,28 @@ namespace MvcMusicStore.Controllers
             };
 
             return Json(results);
+        }
+
+        //
+        // Get: /ShoppingCart/Checkout
+        [HttpGet]
+        public ActionResult Checkout()
+        {
+            var cart = ShoppingCart.GetCart(this.HttpContext);
+            if (cart != null)
+            {
+                var order = new Order { Username = User.Identity.Name, OrderDate = DateTime.Now };
+
+                //Save Order
+                storeDB.Orders.Add(order);
+                storeDB.SaveChanges();
+
+                //Process the order
+                cart.CreateOrder(order);
+
+                return RedirectToAction("Index", "Shipping", new { orderId = order.OrderId , amount = order.Total});
+            }
+            return View("Index");
         }
 
         //
