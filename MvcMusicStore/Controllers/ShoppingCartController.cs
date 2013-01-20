@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
 using MvcMusicStore.ViewModels;
+using ShoppingCartService.Commands;
 
 namespace MvcMusicStore.Controllers
 {
@@ -42,6 +43,12 @@ namespace MvcMusicStore.Controllers
             var cart = ShoppingCart.GetCart(this.HttpContext);
 
             cart.AddToCart(addedAlbum);
+
+            MvcApplication.Bus.Send<AddToShoppingCartCommand>(c =>
+                                                                  {
+                                                                      c.AlbumId = id.ToString();
+                                                                      c.ShoppingCartId = cart.ShoppingCartId;
+                                                                  });
 
             // Go back to the main store page for more shopping
             return RedirectToAction("Index");

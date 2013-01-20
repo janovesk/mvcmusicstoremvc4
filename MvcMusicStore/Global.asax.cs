@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using NServiceBus;
 
 namespace MvcMusicStore
 {
@@ -12,6 +13,7 @@ namespace MvcMusicStore
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        public static IBus Bus = StartBus();
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -37,6 +39,20 @@ namespace MvcMusicStore
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            StartBus();
+
+        }
+
+        private static IBus StartBus()
+        {
+           return Configure.With()
+               .DefaultBuilder()
+                .XmlSerializer()
+                .MsmqTransport()
+                .UnicastBus()
+                .SendOnly();
+
         }
     }
 }
