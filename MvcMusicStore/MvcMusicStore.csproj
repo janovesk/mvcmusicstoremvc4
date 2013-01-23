@@ -228,21 +228,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\StoreManager\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\StoreManager\Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\StoreManager\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\StoreManager\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\StoreManager\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />

@@ -44,12 +44,6 @@ namespace MvcMusicStore.Controllers
 
             cart.AddToCart(addedAlbum);
 
-            MvcApplication.Bus.Send<AddToShoppingCartCommand>(c =>
-                                                                  {
-                                                                      c.AlbumId = id.ToString();
-                                                                      c.ShoppingCartId = cart.ShoppingCartId;
-                                                                  });
-
             // Go back to the main store page for more shopping
             return RedirectToAction("Index");
         }
@@ -92,16 +86,22 @@ namespace MvcMusicStore.Controllers
             var cart = ShoppingCart.GetCart(this.HttpContext);
             if (cart != null)
             {
-                var order = new Order { Username = User.Identity.Name, OrderDate = DateTime.Now };
 
-                //Save Order
-                storeDB.Orders.Add(order);
-                storeDB.SaveChanges();
-
-                //Process the order
-                cart.CreateOrder(order);
-
-                return RedirectToAction("Index", "Shipping", new { orderId = order.OrderId , amount = order.Total});
+                var orderId = Guid.NewGuid().ToString();
+                var total = cart.GetTotal();
+                MvcApplication.Bus.Send<CreatOrderCommand>(c =>
+                                                               {
+                                                                   c.OrderId = Guid.NewGuid().ToString();
+                                                                   c.User = User.Identity.Name;
+                                                                   c.CartItems = (from ci in cart.GetCartItems()
+                                                                                  select new CreatOrderCommand.CartItem
+                                                                                             {
+                                                                                                 AlbumId = ci.AlbumId,
+                                                                                                 Price = ci.Album.Price
+                                                                                             }).ToList();
+                                                               });
+                cart.EmptyCart();
+                return RedirectToAction("Index", "Shipping", new { orderId = orderId , amount = total});
             }
             return View("Index");
         }
