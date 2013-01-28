@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
+using PaymentService.Commands;
 
 namespace MvcMusicStore.Controllers
 {
@@ -30,15 +33,23 @@ namespace MvcMusicStore.Controllers
 
             var orderId = values["OrderId"];
             var amount = values["Amount"];
-            
-            //send to service with NSB
+
+            MvcApplication.Bus.Send<PayOrderCommand>(c =>
+                                                         {
+                                                             c.Name = visaPayment.Name;
+                                                             c.VisaNumber = visaPayment.CreditCardNumber;
+                                                             c.ExpiryMonth = Int32.Parse(visaPayment.ExpiryMonth);
+                                                             c.ExpiryYear = Int32.Parse(visaPayment.ExpiryYear);
+                                                             c.AmountToPay = Decimal.Parse(amount, CultureInfo.InvariantCulture);
+                                                             c.OrderId = orderId;
+                                                         });
             
             return RedirectToAction("Complete", new {orderId , amount});
         }
 
         //
         // GET: /Payment/Complete
-        public ActionResult Complete(int orderId, decimal amount)
+        public ActionResult Complete(string orderId, decimal amount)
         {
             ViewBag.OrderId = orderId;
             ViewBag.Amount = amount;

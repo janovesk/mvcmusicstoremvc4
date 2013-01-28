@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
+using ShipmentService.Commands;
 
 namespace MvcMusicStore.Controllers
 {
@@ -9,7 +10,6 @@ namespace MvcMusicStore.Controllers
     public class ShippingController : Controller
     {
         // GET: /Shipping
-
         public ActionResult Index(string orderId, string amount)
         {
             ViewBag.OrderId = orderId;
@@ -17,7 +17,6 @@ namespace MvcMusicStore.Controllers
             return View();
         }
 
-        //  
         // POST: /Shipping/Address
         [HttpPost]
         public ActionResult Address(FormCollection values)
@@ -27,7 +26,16 @@ namespace MvcMusicStore.Controllers
 
             var orderId = values["OrderId"];
             var amount = values["Amount"];
-            //send to service with NSB
+
+            MvcApplication.Bus.Send<ShipToCommand>(c =>
+                                                       {
+                                                           c.OrderId = orderId;
+                                                           c.Name = shippingAddress.FirstName + " " + shippingAddress.LastName;
+                                                           c.Address = shippingAddress.Address;
+                                                           c.Zip = shippingAddress.PostalCode;
+                                                           c.City = shippingAddress.City;
+                                                       });
+
 
             return RedirectToAction("Index", "Payment", new {orderId, amount });
 

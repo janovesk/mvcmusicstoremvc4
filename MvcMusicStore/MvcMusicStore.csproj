@@ -316,6 +316,14 @@
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PaymentService.Commands\PaymentService.Commands.csproj">
+      <Project>{2B1A820F-3796-4AF6-95C8-E8DBC3A77C5C}</Project>
+      <Name>PaymentService.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShipmentService.Commands\ShipmentService.Commands.csproj">
+      <Project>{28DBDC9A-E29F-4F71-84E1-FB443FBF489A}</Project>
+      <Name>ShipmentService.Commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShoppingCartService.Commands\ShoppingCartService.Commands.csproj">
       <Project>{33042fff-cea7-458e-9a4c-768a61501fc8}</Project>
       <Name>ShoppingCartService.Commands</Name>

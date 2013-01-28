@@ -91,7 +91,7 @@ namespace MvcMusicStore.Controllers
                 var total = cart.GetTotal();
                 MvcApplication.Bus.Send<CreatOrderCommand>(c =>
                                                                {
-                                                                   c.OrderId = Guid.NewGuid().ToString();
+                                                                   c.OrderId = orderId;
                                                                    c.User = User.Identity.Name;
                                                                    c.CartItems = (from ci in cart.GetCartItems()
                                                                                   select new CreatOrderCommand.CartItem
